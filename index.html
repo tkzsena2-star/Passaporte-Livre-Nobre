@@ -186,6 +186,7 @@
     }
 
     /* range badges */
+    .id-card[data-range="1"]   { border-left: 3px solid #f368e0; }
     .id-card[data-range="100"] { border-left: 3px solid #ff6b6b; }
     .id-card[data-range="200"] { border-left: 3px solid #ffd93d; }
     .id-card[data-range="300"] { border-left: 3px solid #6bcb77; }
@@ -263,7 +264,7 @@
 
 <header>
   <h1>🔓 IDs Livres</h1>
-  <p>Consulte e filtre os IDs disponíveis de 100 a 999</p>
+  <p>Consulte e filtre os IDs disponíveis de 13 a 984</p>
 </header>
 
 <div class="container">
@@ -278,6 +279,7 @@
   <!-- FILTERS -->
   <div class="filters">
     <button class="filter-btn active" data-filter="all">Todos</button>
+    <button class="filter-btn" data-filter="1">1–99</button>
     <button class="filter-btn" data-filter="100">100–199</button>
     <button class="filter-btn" data-filter="200">200–299</button>
     <button class="filter-btn" data-filter="300">300–399</button>
@@ -289,6 +291,7 @@
 
   <!-- LEGEND -->
   <div class="legend">
+    <div class="legend-item"><span class="legend-dot" style="background:#f368e0"></span> Faixa 1–99</div>
     <div class="legend-item"><span class="legend-dot" style="background:#ff6b6b"></span> Faixa 100</div>
     <div class="legend-item"><span class="legend-dot" style="background:#ffd93d"></span> Faixa 200</div>
     <div class="legend-item"><span class="legend-dot" style="background:#6bcb77"></span> Faixa 300</div>
@@ -321,6 +324,8 @@
 
 <script>
   const FREE_IDS = [
+    // Faixa 1–99
+    13,20,24,29,32,48,67,68,72,74,80,81,83,84,85,89,90,94,
     // Faixa 100
     135,141,176,184,185,195,196,
     // Faixa 200
@@ -347,6 +352,7 @@
   document.getElementById('totalCount').textContent = FREE_IDS.length;
 
   function getRange(id) {
+    if (id >= 1 && id < 100) return '1';
     if (id >= 100 && id < 200) return '100';
     if (id >= 200 && id < 300) return '200';
     if (id >= 300 && id < 400) return '300';
@@ -397,6 +403,7 @@
 
     const labels = {
       all: 'Todos os IDs',
+      '1':   'Faixa 1–99',
       '100': 'Faixa 100–199',
       '200': 'Faixa 200–299',
       '300': 'Faixa 300–399',
