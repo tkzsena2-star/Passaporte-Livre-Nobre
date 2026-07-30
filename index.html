@@ -1,0 +1,440 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>IDs Livres</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: #0f0f1a;
+      color: #e0e0e0;
+      min-height: 100vh;
+    }
+
+    header {
+      background: linear-gradient(135deg, #1a1a2e, #16213e);
+      padding: 30px 20px;
+      text-align: center;
+      border-bottom: 2px solid #00d4ff33;
+      box-shadow: 0 4px 20px rgba(0, 212, 255, 0.15);
+    }
+
+    header h1 {
+      font-size: 2.2rem;
+      color: #00d4ff;
+      text-shadow: 0 0 20px #00d4ff88;
+      letter-spacing: 2px;
+    }
+
+    header p {
+      color: #8899aa;
+      margin-top: 6px;
+      font-size: 0.95rem;
+    }
+
+    .container {
+      max-width: 900px;
+      margin: 0 auto;
+      padding: 30px 20px;
+    }
+
+    /* SEARCH BAR */
+    .search-box {
+      display: flex;
+      align-items: center;
+      background: #1a1a2e;
+      border: 1px solid #00d4ff44;
+      border-radius: 50px;
+      padding: 10px 20px;
+      margin-bottom: 24px;
+      box-shadow: 0 0 15px rgba(0, 212, 255, 0.1);
+    }
+
+    .search-box input {
+      flex: 1;
+      background: transparent;
+      border: none;
+      outline: none;
+      color: #e0e0e0;
+      font-size: 1rem;
+    }
+
+    .search-box input::placeholder {
+      color: #556677;
+    }
+
+    .search-box .icon {
+      color: #00d4ff;
+      font-size: 1.2rem;
+      margin-right: 10px;
+    }
+
+    .clear-btn {
+      background: none;
+      border: none;
+      color: #556677;
+      cursor: pointer;
+      font-size: 1.1rem;
+      padding: 0 4px;
+      transition: color 0.2s;
+    }
+
+    .clear-btn:hover {
+      color: #ff4466;
+    }
+
+    /* FILTER BUTTONS */
+    .filters {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-bottom: 28px;
+    }
+
+    .filter-btn {
+      padding: 8px 22px;
+      border-radius: 50px;
+      border: 1.5px solid #00d4ff55;
+      background: #1a1a2e;
+      color: #aabbcc;
+      cursor: pointer;
+      font-size: 0.9rem;
+      font-weight: 600;
+      transition: all 0.2s;
+      letter-spacing: 0.5px;
+    }
+
+    .filter-btn:hover {
+      border-color: #00d4ff;
+      color: #00d4ff;
+      box-shadow: 0 0 12px rgba(0, 212, 255, 0.2);
+    }
+
+    .filter-btn.active {
+      background: linear-gradient(135deg, #00d4ff22, #0066ff22);
+      border-color: #00d4ff;
+      color: #00d4ff;
+      box-shadow: 0 0 16px rgba(0, 212, 255, 0.3);
+    }
+
+    /* STATS BAR */
+    .stats-bar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 18px;
+      padding: 0 4px;
+    }
+
+    .stats-text {
+      color: #556677;
+      font-size: 0.88rem;
+    }
+
+    .stats-count {
+      color: #00d4ff;
+      font-weight: 700;
+    }
+
+    /* ID GRID */
+    .id-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(80px, 1fr));
+      gap: 12px;
+    }
+
+    .id-card {
+      background: linear-gradient(135deg, #1a1a2e, #16213e);
+      border: 1px solid #00d4ff22;
+      border-radius: 12px;
+      padding: 16px 10px;
+      text-align: center;
+      font-size: 1.1rem;
+      font-weight: 700;
+      color: #00d4ff;
+      cursor: default;
+      transition: all 0.2s;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .id-card::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(135deg, #00d4ff08, transparent);
+      opacity: 0;
+      transition: opacity 0.2s;
+    }
+
+    .id-card:hover {
+      border-color: #00d4ff88;
+      transform: translateY(-3px);
+      box-shadow: 0 6px 20px rgba(0, 212, 255, 0.2);
+    }
+
+    .id-card:hover::before {
+      opacity: 1;
+    }
+
+    /* range badges */
+    .id-card[data-range="100"] { border-left: 3px solid #ff6b6b; }
+    .id-card[data-range="200"] { border-left: 3px solid #ffd93d; }
+    .id-card[data-range="300"] { border-left: 3px solid #6bcb77; }
+    .id-card[data-range="400"] { border-left: 3px solid #a855f7; }
+    .id-card[data-range="700"] { border-left: 3px solid #00d4ff; }
+    .id-card[data-range="800"] { border-left: 3px solid #ff9f43; }
+    .id-card[data-range="900"] { border-left: 3px solid #ee5a24; }
+
+    .id-card.highlighted {
+      border-color: #ff6b6b !important;
+      background: linear-gradient(135deg, #ff6b6b22, #1a1a2e);
+      box-shadow: 0 0 20px rgba(255, 107, 107, 0.3) !important;
+    }
+
+    /* NO RESULTS */
+    .no-results {
+      text-align: center;
+      padding: 60px 20px;
+      color: #556677;
+      display: none;
+    }
+
+    .no-results .emoji {
+      font-size: 3rem;
+      margin-bottom: 12px;
+    }
+
+    .no-results p {
+      font-size: 1.1rem;
+    }
+
+    /* LEGEND */
+    .legend {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 14px;
+      margin-bottom: 24px;
+      padding: 14px 18px;
+      background: #1a1a2e;
+      border-radius: 12px;
+      border: 1px solid #ffffff0a;
+    }
+
+    .legend-item {
+      display: flex;
+      align-items: center;
+      gap: 7px;
+      font-size: 0.82rem;
+      color: #8899aa;
+    }
+
+    .legend-dot {
+      width: 12px;
+      height: 12px;
+      border-radius: 3px;
+    }
+
+    footer {
+      text-align: center;
+      padding: 24px;
+      color: #334455;
+      font-size: 0.82rem;
+      border-top: 1px solid #ffffff08;
+      margin-top: 40px;
+    }
+
+    @media (max-width: 480px) {
+      header h1 { font-size: 1.6rem; }
+      .id-grid { grid-template-columns: repeat(auto-fill, minmax(65px, 1fr)); }
+      .id-card { font-size: 1rem; padding: 13px 8px; }
+    }
+  </style>
+</head>
+<body>
+
+<header>
+  <h1>🔓 IDs Livres</h1>
+  <p>Consulte e filtre os IDs disponíveis de 100 a 999</p>
+</header>
+
+<div class="container">
+
+  <!-- SEARCH -->
+  <div class="search-box">
+    <span class="icon">🔍</span>
+    <input type="number" id="searchInput" placeholder="Buscar ID... ex: 205" min="100" max="400" />
+    <button class="clear-btn" id="clearBtn" title="Limpar busca">✕</button>
+  </div>
+
+  <!-- FILTERS -->
+  <div class="filters">
+    <button class="filter-btn active" data-filter="all">Todos</button>
+    <button class="filter-btn" data-filter="100">100–199</button>
+    <button class="filter-btn" data-filter="200">200–299</button>
+    <button class="filter-btn" data-filter="300">300–399</button>
+    <button class="filter-btn" data-filter="400">400–499</button>
+    <button class="filter-btn" data-filter="700">700–799</button>
+    <button class="filter-btn" data-filter="800">800–899</button>
+    <button class="filter-btn" data-filter="900">900–999</button>
+  </div>
+
+  <!-- LEGEND -->
+  <div class="legend">
+    <div class="legend-item"><span class="legend-dot" style="background:#ff6b6b"></span> Faixa 100</div>
+    <div class="legend-item"><span class="legend-dot" style="background:#ffd93d"></span> Faixa 200</div>
+    <div class="legend-item"><span class="legend-dot" style="background:#6bcb77"></span> Faixa 300</div>
+    <div class="legend-item"><span class="legend-dot" style="background:#a855f7"></span> Faixa 400</div>
+    <div class="legend-item"><span class="legend-dot" style="background:#00d4ff"></span> Faixa 700</div>
+    <div class="legend-item"><span class="legend-dot" style="background:#ff9f43"></span> Faixa 800</div>
+    <div class="legend-item"><span class="legend-dot" style="background:#ee5a24"></span> Faixa 900</div>
+  </div>
+
+  <!-- STATS -->
+  <div class="stats-bar">
+    <span class="stats-text">Mostrando <span class="stats-count" id="visibleCount">0</span> IDs livres</span>
+    <span class="stats-text" id="filterLabel">Todos os IDs</span>
+  </div>
+
+  <!-- GRID -->
+  <div class="id-grid" id="idGrid"></div>
+
+  <!-- NO RESULTS -->
+  <div class="no-results" id="noResults">
+    <div class="emoji">🔎</div>
+    <p>Nenhum ID encontrado para "<span id="searchTerm"></span>"</p>
+  </div>
+
+</div>
+
+<footer>
+  Total de IDs livres cadastrados: <strong id="totalCount"></strong>
+</footer>
+
+<script>
+  const FREE_IDS = [
+    // Faixa 100
+    135,141,176,184,185,195,196,
+    // Faixa 200
+    203,204,205,207,208,209,211,213,214,215,216,217,218,219,221,223,224,
+    227,228,229,233,234,235,236,237,239,240,241,242,246,248,249,250,251,
+    252,254,255,259,260,261,262,268,269,270,271,273,274,275,276,278,280,
+    281,282,283,285,286,287,288,291,292,293,
+    // Faixa 300
+    318,326,354,358,364,368,372,376,378,383,386,395,398,
+    // Faixa 400
+    407,408,409,413,417,419,421,426,427,428,429,435,436,437,438,439,
+    443,448,451,452,454,456,457,458,459,461,462,463,464,465,467,468,
+    469,470,471,472,473,474,475,476,477,478,479,481,482,483,484,485,
+    487,489,491,493,494,495,496,497,498,
+    // Faixa 700
+    766,768,783,
+    // Faixa 800
+    804,810,813,819,837,842,843,846,893,894,895,896,
+    // Faixa 900
+    913,917,918,924,927,928,935,936,937,938,941,942,943,947,
+    951,953,954,956,958,961,962,963,964,968,981,984
+  ].sort((a, b) => a - b);
+
+  document.getElementById('totalCount').textContent = FREE_IDS.length;
+
+  function getRange(id) {
+    if (id >= 100 && id < 200) return '100';
+    if (id >= 200 && id < 300) return '200';
+    if (id >= 300 && id < 400) return '300';
+    if (id >= 400 && id < 500) return '400';
+    if (id >= 700 && id < 800) return '700';
+    if (id >= 800 && id < 900) return '800';
+    if (id >= 900 && id < 1000) return '900';
+    return 'other';
+  }
+
+  let currentFilter = 'all';
+  let searchValue = '';
+
+  function render() {
+    const grid = document.getElementById('idGrid');
+    const noResults = document.getElementById('noResults');
+    const searchTerm = document.getElementById('searchTerm');
+    const visibleCount = document.getElementById('visibleCount');
+    const filterLabel = document.getElementById('filterLabel');
+
+    grid.innerHTML = '';
+
+    let filtered = FREE_IDS.filter(id => {
+      const inRange = currentFilter === 'all' || getRange(id) === currentFilter;
+      const matchesSearch = searchValue === '' || id.toString().includes(searchValue);
+      return inRange && matchesSearch;
+    });
+
+    if (filtered.length === 0) {
+      noResults.style.display = 'block';
+      grid.style.display = 'none';
+      searchTerm.textContent = searchValue || currentFilter;
+    } else {
+      noResults.style.display = 'none';
+      grid.style.display = 'grid';
+
+      filtered.forEach(id => {
+        const card = document.createElement('div');
+        card.className = 'id-card' + (searchValue && id.toString() === searchValue ? ' highlighted' : '');
+        card.dataset.range = getRange(id);
+        card.title = `ID ${id} — Faixa ${getRange(id)}`;
+        card.textContent = id;
+        grid.appendChild(card);
+      });
+    }
+
+    visibleCount.textContent = filtered.length;
+
+    const labels = {
+      all: 'Todos os IDs',
+      '100': 'Faixa 100–199',
+      '200': 'Faixa 200–299',
+      '300': 'Faixa 300–399',
+      '400': 'Faixa 400–499',
+      '700': 'Faixa 700–799',
+      '800': 'Faixa 800–899',
+      '900': 'Faixa 900–999',
+    };
+    filterLabel.textContent = labels[currentFilter] || 'Todos os IDs';
+  }
+
+  // Filter buttons
+  document.querySelectorAll('.filter-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      currentFilter = btn.dataset.filter;
+      render();
+    });
+  });
+
+  // Search
+  const searchInput = document.getElementById('searchInput');
+  searchInput.addEventListener('input', () => {
+    searchValue = searchInput.value.trim();
+    render();
+  });
+
+  // Clear
+  document.getElementById('clearBtn').addEventListener('click', () => {
+    searchInput.value = '';
+    searchValue = '';
+    render();
+  });
+
+  // Initial render
+  render();
+</script>
+
+</body>
+</html>
